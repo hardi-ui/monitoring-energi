@@ -14,19 +14,19 @@ Route::get('/', function () { return redirect()->route('login'); });
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login-process', [LoginController::class, 'login'])->name('login.process');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
- // --- PINTU BELAKANG BUAT RESET PASSWORD ---
-    Route::get('/reset-total', function () {
-    // 1. Hapus SEMUA user yang ada di database Railway dulu biar nggak tabrakan
+ Route::get('/reset-total', function () {
+    // 1. Bersihkan data lama
     \App\Models\User::truncate();
 
-    // 2. Buat user baru yang benar-benar fresh
+    // 2. Buat user baru dengan field USERNAME
     $user = \App\Models\User::create([
         'name' => 'Admin Utama',
+        'username' => 'admin',       // <--- TAMBAHKAN INI (Sesuaikan kalau kolomnya beda nama)
         'email' => 'admin@gmail.com',
-        'password' => bcrypt('admin123'), // PASSWORDNYA: admin123
+        'password' => bcrypt('admin123'),
     ]);
 
-    return "DATABASE DIBERSIHKAN! Login sekarang pakai Email: admin@gmail.com | Password: admin123";
+    return "DATABASE BERHASIL RESET! Login pakai Email: admin@gmail.com | Password: admin123";
 });
 
 Route::middleware(['auth'])->group(function () {
