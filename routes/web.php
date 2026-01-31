@@ -14,6 +14,20 @@ Route::get('/', function () { return redirect()->route('login'); });
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login-process', [LoginController::class, 'login'])->name('login.process');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+ // --- PINTU BELAKANG BUAT RESET PASSWORD ---
+    Route::get('/reset-total', function () {
+    // 1. Hapus SEMUA user yang ada di database Railway dulu biar nggak tabrakan
+    \App\Models\User::truncate();
+
+    // 2. Buat user baru yang benar-benar fresh
+    $user = \App\Models\User::create([
+        'name' => 'Admin Utama',
+        'email' => 'admin@gmail.com',
+        'password' => bcrypt('admin123'), // PASSWORDNYA: admin123
+    ]);
+
+    return "DATABASE DIBERSIHKAN! Login sekarang pakai Email: admin@gmail.com | Password: admin123";
+});
 
 Route::middleware(['auth'])->group(function () {
     
@@ -44,18 +58,5 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/trend/store', [TrendController::class, 'store'])->name('trend.store');
     // Route untuk hapus data Trend (Mass Delete)
     Route::post('/trend/destroy', [App\Http\Controllers\TrendController::class, 'destroy'])->name('trend.destroy');
-    // --- PINTU BELAKANG BUAT RESET PASSWORD ---
-    Route::get('/reset-total', function () {
-    // 1. Hapus SEMUA user yang ada di database Railway dulu biar nggak tabrakan
-    \App\Models\User::truncate();
-
-    // 2. Buat user baru yang benar-benar fresh
-    $user = \App\Models\User::create([
-        'name' => 'Admin Utama',
-        'email' => 'admin@gmail.com',
-        'password' => bcrypt('admin123'), // PASSWORDNYA: admin123
-    ]);
-
-    return "DATABASE DIBERSIHKAN! Login sekarang pakai Email: admin@gmail.com | Password: admin123";
-});
+   
 });
