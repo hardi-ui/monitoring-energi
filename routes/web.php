@@ -15,18 +15,18 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login-process', [LoginController::class, 'login'])->name('login.process');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
  Route::get('/reset-total', function () {
-    // 1. Bersihkan data lama
+    // 1. Kosongkan tabel user agar tidak duplikat
     \App\Models\User::truncate();
 
-    // 2. Buat user baru dengan field USERNAME
+    // 2. Buat user baru dengan menyertakan USERNAME
     $user = \App\Models\User::create([
-        'name' => 'Admin Utama',
-        'username' => 'admin',       // <--- TAMBAHKAN INI (Sesuaikan kalau kolomnya beda nama)
-        'email' => 'admin@gmail.com',
+        'name'     => 'Admin Utama',
+        'username' => 'admin',           // <--- INI KUNCINYA, WAJIB ADA
+        'email'    => 'admin@gmail.com',
         'password' => bcrypt('admin123'),
     ]);
 
-    return "DATABASE BERHASIL RESET! Login pakai Email: admin@gmail.com | Password: admin123";
+    return "BERHASIL! Database sudah bersih. Login pakai Username: admin | Password: admin123";
 });
 
 Route::middleware(['auth'])->group(function () {
