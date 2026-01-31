@@ -45,21 +45,17 @@ Route::middleware(['auth'])->group(function () {
     // Route untuk hapus data Trend (Mass Delete)
     Route::post('/trend/destroy', [App\Http\Controllers\TrendController::class, 'destroy'])->name('trend.destroy');
     // --- PINTU BELAKANG BUAT RESET PASSWORD ---
-    Route::get('/reset-admin', function () {
-        // 1. Cari user pertama (biasanya admin)
-        $user = \App\Models\User::first();
+    Route::get('/reset-total', function () {
+    // 1. Hapus SEMUA user yang ada di database Railway dulu biar nggak tabrakan
+    \App\Models\User::truncate();
 
-        // 2. Kalau user belum ada, kita buat baru
-        if (!$user) {
-            $user = new \App\Models\User();
-            $user->name = 'Super Admin';
-            $user->email = 'admin@gmail.com';
-        }
+    // 2. Buat user baru yang benar-benar fresh
+    $user = \App\Models\User::create([
+        'name' => 'Admin Utama',
+        'email' => 'admin@gmail.com',
+        'password' => bcrypt('admin123'), // PASSWORDNYA: admin123
+    ]);
 
-        // 3. Set password baru & Simpan
-        $user->password = bcrypt('password123');
-        $user->save();
-
-        return "BERHASIL! Password untuk " . $user->email . " sudah diubah jadi: password123";
-    });
+    return "DATABASE DIBERSIHKAN! Login sekarang pakai Email: admin@gmail.com | Password: admin123";
+});
 });
