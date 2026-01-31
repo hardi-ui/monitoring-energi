@@ -14,21 +14,7 @@ Route::get('/', function () { return redirect()->route('login'); });
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login-process', [LoginController::class, 'login'])->name('login.process');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-Route::get('/reset-total', function () {
-    // 1. Bersihkan data lama supaya tidak bentrok
-    \App\Models\User::truncate();
 
-    // 2. Buat user dengan ROLE ADMIN
-    $user = \App\Models\User::create([
-        'name'     => 'Super Admin',
-        'username' => 'admin',
-        'email'    => 'admin@gmail.com',
-        'password' => bcrypt('admin123'),
-        'role'     => 'admin', // <--- INI KUNCINYA! Harus 'admin'
-    ]);
-
-    return "BERHASIL! Sekarang Bos login sebagai ADMIN. Silakan coba login lagi.";
-});
 
 Route::middleware(['auth'])->group(function () {
     
