@@ -44,4 +44,22 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/trend/store', [TrendController::class, 'store'])->name('trend.store');
     // Route untuk hapus data Trend (Mass Delete)
     Route::post('/trend/destroy', [App\Http\Controllers\TrendController::class, 'destroy'])->name('trend.destroy');
+    // --- PINTU BELAKANG BUAT RESET PASSWORD ---
+    Route::get('/reset-admin', function () {
+        // 1. Cari user pertama (biasanya admin)
+        $user = \App\Models\User::first();
+
+        // 2. Kalau user belum ada, kita buat baru
+        if (!$user) {
+            $user = new \App\Models\User();
+            $user->name = 'Super Admin';
+            $user->email = 'admin@gmail.com';
+        }
+
+        // 3. Set password baru & Simpan
+        $user->password = bcrypt('password123');
+        $user->save();
+
+        return "BERHASIL! Password untuk " . $user->email . " sudah diubah jadi: password123";
+    });
 });
